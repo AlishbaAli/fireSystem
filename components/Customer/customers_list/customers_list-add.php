@@ -832,9 +832,10 @@ if ($cmd == 'add') {
 																		$i = 0;
 																		if ($count_cl1 > 0) {
 																			$row_cl1 = $db->fetch($result_cl1);
-																			foreach ($row_cl1 as $data) { ?>
+																			foreach ($row_cl1 as $data) {
+																				$workorder_id = $data['id']; ?>
 																				<tr>
-																					<td><?php echo $data['id']; ?></td>
+																					<td><?php echo $workorder_id; ?></td>
 																					<td>
 																						<?php
 																						if ($data['createdondate'] == "0000-00-00 00:00:00") {
@@ -851,7 +852,7 @@ if ($cmd == 'add') {
 																					<td><?php echo $data['laborbilltocustomer']; ?></td>
 																					<td><?php echo $data['partsbilltocustomer']; ?></td>
 																					<td>
-																						<a class="" href="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&cmd2=edit&active_tab=tab2&id=" . $id . "&detail_id=" . $data['id']) ?>">
+																						<a class="" href="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&cmd2=edit&active_tab=tab2&id=" . $id . "&detail_id=" . $workorder_id) ?>">
 																							<i class="material-icons dp48">edit</i>
 																						</a>
 																						<?php /*?>
@@ -860,6 +861,16 @@ if ($cmd == 'add') {
 																							<i class="material-icons dp48">delete</i>
 																						</a>
 																						<?php */ ?>
+																					</td>
+																					<td>
+																						<form method="post" action="components/<?php echo $module_folder_directory; ?><?php echo $module; ?>/pdf_create_files.php" target="_blank">
+																							<input type="hidden" name="module" value="<?php echo $module; ?>">
+																							<input type="hidden" name="menu_id" value="<?php echo $menu_id; ?>">
+																							<input type="hidden" name="workorder_id" value="<?php echo $workorder_id; ?>">
+																							<button type="submit" title="Print Work Order" class=" waves-effect waves-light brown darken-1  btn gradient-45deg-light-green-cyan box-shadow-none border-round mr-1 mb-1">
+																								<i class="material-icons dp48">print</i>
+																							</button>
+																						</form>
 																					</td>
 																				</tr>
 																		<?php
@@ -1115,9 +1126,11 @@ if ($cmd == 'add') {
 																		$i = 0;
 																		if ($count_cl1 > 0) {
 																			$row_cl1 = $db->fetch($result_cl1);
-																			foreach ($row_cl1 as $data) { ?>
+																			foreach ($row_cl1 as $data) {
+																				$workorder_done_id 	= $data['workorder_done_id'];
+																				$workorder_id 		= $data['id']; ?>
 																				<tr>
-																					<td><?php echo $data['id']; ?></td>
+																					<td><?php echo $workorder_id; ?></td>
 																					<td><?php echo $data['technician_name']; ?></td>
 																					<td><?php echo $data['laborhours']; ?></td>
 																					<td>
@@ -1125,7 +1138,7 @@ if ($cmd == 'add') {
 																						<?php if ($data['timein'] != "") echo "OUT: " . dateformat1_with_time_USA($data['timeout']); ?>
 																					</td>
 																					<td>
-																						<a class="" href="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&cmd3=edit&active_tab=tab3&id=" . $id . "&detail_id=" . $data['workorder_done_id']) ?>">
+																						<a class="" href="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&cmd3=edit&active_tab=tab3&id=" . $id . "&detail_id=" . $workorder_done_id) ?>">
 																							<i class="material-icons dp48">edit</i>
 																						</a>
 																						<?php /*?>
@@ -1135,14 +1148,16 @@ if ($cmd == 'add') {
 																						</a>
 																						<?php */ ?>
 																					</td>
-																					<td>
-																						<form method="post" action="components/<?php echo $module_folder_directory; ?><?php echo $module; ?>/pdf_create_files.php" target="_blank">
+																					<td> <?php /*?>
+																						<form method="post" action="components/<?php echo $module_folder_directory; ?><?php echo $module; ?>/pdf_create_files2.php" target="_blank">
 																							<input type="hidden" name="module" value="<?php echo $module; ?>">
 																							<input type="hidden" name="menu_id" value="<?php echo $menu_id; ?>">
-																							<button type="submit" title="View Voucher" class=" waves-effect waves-light brown darken-1  btn gradient-45deg-light-green-cyan box-shadow-none border-round mr-1 mb-1">
+																							<input type="hidden" name="workorder_done_id" value="<?php echo $workorder_done_id; ?>">
+																							<input type="hidden" name="workorder_id" value="<?php echo $workorder_id; ?>">
+																							<button type="submit" title="Print Work Order" class=" waves-effect waves-light brown darken-1  btn gradient-45deg-light-green-cyan box-shadow-none border-round mr-1 mb-1">
 																								<i class="material-icons dp48">print</i>
 																							</button>
-																						</form>
+																						</form> <?php */ ?>
 																					</td>
 																				</tr>
 																		<?php
