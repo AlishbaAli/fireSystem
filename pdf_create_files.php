@@ -28,11 +28,22 @@ if (isset($menu_id)) {
 		$company_name					= $row_ee1[0]['company_name'];
 		$company_logo					= $row_ee1[0]['company_logo'];
 	}
-
 	/////////////////////////////////////////// Master ////////////////////////////////////////////
-	// $sql_ee 	= "	"; //echo $sql_ee; die;
-	// $result_ee 	= $db->query($conn, $sql_ee);
-	// $count_ee 	= $db->counter($result_ee);
+	$sql_ee 	= "	SELECT 	CONCAT(b.fname, ' ', b.lname) AS operator_name,
+							CONCAT(c.fname, ' ', c.lname) AS assign_to_name, 
+							a2.`name`, a2.streetnumber, a2.streetname, a2.cityid, a2.stateid, a2.suite, a2.zipcode, a2.phonenumber,
+						 	d.city, e.state,
+							a.*
+					FROM workorders a
+					INNER JOIN customerinfo a2 ON a2.id = a.customerinfoid
+					LEFT JOIN employee b ON b.id = a.operatorid  
+					LEFT JOIN employee c ON c.id = a.assigntoid
+					LEFT JOIN city d ON d.id = a2.cityid
+					LEFT JOIN state e ON c.id = a2.stateid
+ 
+					WHERE a.id = '" . $workorder_id . "' "; //echo $sql_ee; die;
+	$result_ee 	= $db->query($conn, $sql_ee);
+	$count_ee 	= $db->counter($result_ee);
 	$css = "
 		<style>
 			h1 {
@@ -54,17 +65,17 @@ if (isset($menu_id)) {
 			}
 			table.top{
 				width: 100%;
-				font-size: 11px;
+				font-size: 13px;
 			}
 			table.second{
 				color: #00000;
-				font-size: 11px;
+				font-size: 13px;
 				width: 100%;
 				font-weight: bold;
 			}
 			table.first {
 				color: #000066;
-				font-size: 10px;
+				font-size: 14px;
 				width: 100%;
 			}
 			.first th {
@@ -83,9 +94,7 @@ if (isset($menu_id)) {
 				
 			} 
 			td.withborders{
-			 border: 1px solid #202124;
-			 text-align: center;
-				
+			 	border: 1px solid #202124;
 			} 
 			.student_info_section{
 				background-color: #EAEDEE;
@@ -98,33 +107,35 @@ if (isset($menu_id)) {
 				text-transform: uppercase;
 				font-style: italic;
 				text-decoration: underline;
-			}
-			
+			} 
 		</style>";
 	require_once '../../../mpdf/vendor/autoload.php';
 	$mpdf = new \Mpdf\Mpdf();
-	/*
 	if ($count_ee > 0) {
-		$std_full_name 				= "";
-		$row_ee						= $db->fetch($result_ee);
-		foreach ($row_ee as $data_ee) {
-			$v_id 						= $data_ee['v_id'];
-			include('pdf_detail.php');
-			$report_data = $report_data . $css;
-			// echo $report_data;die;
-			$mpdf->AddPage('P', '', '', '', '', 10, 10, 10, 10, 0, 0);
-			$mpdf->writeHTML($report_data);
-		}
+		$row_ee 		= $db->fetch($result_ee);
+		$cust_name 		= $row_ee[0]['name'];
+		$streetnumber 	= $row_ee[0]['streetnumber'];
+		$streetname 	= $row_ee[0]['streetname'];
+		$city_name 		= $row_ee[0]['city'];
+		$state_name 	= $row_ee[0]['state'];
+		$suite 			= $row_ee[0]['suite'];
+		$zipcode 		= $row_ee[0]['zipcode'];
+		$phonenumber 	= $row_ee[0]['phonenumber'];
+		$contact 		= $row_ee[0]['contact'];
+		$problem 		= $row_ee[0]['problem'];
+		$comments 		= $row_ee[0]['comments'];
+		$createdondate 		= $row_ee[0]['createdondate'];
+		include('pdf_detail.php');
+		$report_data = $report_data . $css;
+		// echo $report_data;die;
+		$mpdf->AddPage('P', '', '', '', '', 10, 10, 10, 10, 0, 0);
+		$mpdf->writeHTML($report_data);
+		$mpdf->SetTitle('Print ' . $workorder_id . ' Work Order');
+		$file_name = "Print " . $workorder_id . " Work Order.pdf";
+		$mpdf->output($file_name, 'I');
+	} else {
+		echo "<br><h1>Sorry! No record found </h1>";
 	}
-	*/
-	include('pdf_detail2.php');
-	$report_data = $report_data . $css;
-	// echo $report_data;die;
-	$mpdf->AddPage('P', '', '', '', '', 10, 10, 10, 10, 0, 0);
-	$mpdf->writeHTML($report_data);
-	$mpdf->SetTitle('Print Work Order ' . $v_no);
-	$file_name = "Print Work Order " . $v_no . ".pdf";
-	$mpdf->output($file_name, 'I');
 } else {
 	echo "<br><h1>Sorry! No file is available </h1>";
 }
