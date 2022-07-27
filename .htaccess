@@ -1,0 +1,15 @@
+RewriteEngine on
+ErrorDocument 404 http:/localhost/fireg/404
+ErrorDocument 500 http:/localhost/fireg/500
+RewriteRule ^404$ 404.php
+RewriteRule ^500$ 500.php
+RewriteRule ^home$ index2.php
+RewriteRule ^main$ index.php
+RewriteRule ^signin$ signin.php
+RewriteRule ^signout$ signout.php
+RewriteRule ^forget-password$ forget_password.php
+
+
+
+
+
