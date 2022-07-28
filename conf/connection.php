@@ -1,7 +1,8 @@
 <?php
 if ($_SERVER['HTTP_HOST'] == 'localhost') {
 	$mysql_user 	= "root";
-	$mysql_password = "#@aftab91";
+	//$mysql_password = "#@aftab91";
+	$mysql_password = "";
 	$mysql_database = "fireg";
 } else {
 	$mysql_user 	= "";

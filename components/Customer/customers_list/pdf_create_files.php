@@ -69,13 +69,23 @@ if (isset($menu_id)) {
 			}
 			.first th {
 				border: 1px solid #999;
-				background-color: #EAEDEE;
-				text-align: center;
-				vertical-align:middle;
+				//background-color: #EAEDEE;
+				//text-align: center;
+				//vertical-align:middle;
 			}
+			
 			.first td {
-				border: 1px solid #999;
+				// border: 1px solid #999;
 				font-weight: bold;
+			} 
+			.bord td {
+				border: 1px solid #202124;
+				
+			} 
+			td.withborders{
+			 border: 1px solid #202124;
+			 text-align: center;
+				
 			} 
 			.student_info_section{
 				background-color: #EAEDEE;
@@ -84,6 +94,12 @@ if (isset($menu_id)) {
 				width: 100%;
 				padding: 5px 20px;
 			}  
+			.uic{
+				text-transform: uppercase;
+				font-style: italic;
+				text-decoration: underline;
+			}
+			
 		</style>";
 	require_once '../../../mpdf/vendor/autoload.php';
 	$mpdf = new \Mpdf\Mpdf();
@@ -101,7 +117,7 @@ if (isset($menu_id)) {
 		}
 	}
 	*/
-	include('pdf_detail.php');
+	include('pdf_detail2.php');
 	$report_data = $report_data . $css;
 	// echo $report_data;die;
 	$mpdf->AddPage('P', '', '', '', '', 10, 10, 10, 10, 0, 0);
