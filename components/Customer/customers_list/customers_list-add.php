@@ -52,6 +52,8 @@ if (isset($test_on_local) && $test_on_local == 1) {
 	$laboramount 			= 200;
 	$partsamount 			= 200;
 	$workdone 				= "workdone workdone workdone workdone workdone workdone workdone workdone workdone workdone";
+	$contractdate=date('Y/m/d');
+	$contractexpirationdate=date('Y/m/d');
 }
 if (!isset($module)) {
 	require_once('../../../conf/functions.php');
@@ -66,20 +68,29 @@ if (!isset($_SESSION['csrf_session'])) {
 }
 $btn2 = "Add";
 $btn3 = "Add";
+$btn4 = "Add";
 if (!isset($cmd2)) {
 	$cmd2 = "add";
-}
-if (!isset($cmd3)) {
-	$cmd3 = "add";
 }
 if (isset($cmd2) && $cmd2 == 'edit') {
 	$btn2 = "Save";
 }
+if (!isset($cmd3)) {
+	$cmd3 = "add";
+}
 if (isset($cmd3) && $cmd3 == 'edit') {
 	$btn3 = "Save";
 }
+if (!isset($cmd4)) {
+	$cmd4 = "add";
+}
+if (isset($cmd4) && $cmd4 == 'edit') {
+	$btn4 = "Save";
+}
+
 
 extract($_POST);
+
 foreach ($_POST as $key => $value) {
 	if (!is_array($value)) {
 		$data[$key] = remove_special_character(trim(htmlspecialchars(strip_tags(stripslashes($value)), ENT_QUOTES, 'UTF-8')));
@@ -89,6 +100,8 @@ foreach ($_POST as $key => $value) {
 include('tab1_code.php');
 include('tab2_code.php');
 include('tab3_code.php');
+include('tab4_code.php');
+
 if ($cmd == 'edit') {
 	$title_heading = "Edit  Customer Profile";
 	$button_val = "Save";
@@ -155,6 +168,14 @@ if ($cmd == 'add') {
 																} ?>">
 											<i class="material-icons">content_paste</i>
 											<span>Work Orders Done</span>
+										</a>
+									</li>
+									<li class="tab">
+										<a href="#tab4" class="<?php if (!isset($active_tab) || (isset($active_tab) && $active_tab == 'tab4')) {
+																	echo "active";
+																} ?>">
+											<i class="material-icons">content_paste</i>
+											<span>Contracts</span>
 										</a>
 									</li>
 									<li class="indicator" style="left: 0px; right: 0px;"></li>
@@ -832,10 +853,9 @@ if ($cmd == 'add') {
 																		$i = 0;
 																		if ($count_cl1 > 0) {
 																			$row_cl1 = $db->fetch($result_cl1);
-																			foreach ($row_cl1 as $data) {
-																				$workorder_id = $data['id']; ?>
+																			foreach ($row_cl1 as $data) { ?>
 																				<tr>
-																					<td><?php echo $workorder_id; ?></td>
+																					<td><?php echo $data['id']; ?></td>
 																					<td>
 																						<?php
 																						if ($data['createdondate'] == "0000-00-00 00:00:00") {
@@ -852,7 +872,7 @@ if ($cmd == 'add') {
 																					<td><?php echo $data['laborbilltocustomer']; ?></td>
 																					<td><?php echo $data['partsbilltocustomer']; ?></td>
 																					<td>
-																						<a class="" href="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&cmd2=edit&active_tab=tab2&id=" . $id . "&detail_id=" . $workorder_id) ?>">
+																						<a class="" href="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&cmd2=edit&active_tab=tab2&id=" . $id . "&detail_id=" . $data['id']) ?>">
 																							<i class="material-icons dp48">edit</i>
 																						</a>
 																						<?php /*?>
@@ -861,16 +881,6 @@ if ($cmd == 'add') {
 																							<i class="material-icons dp48">delete</i>
 																						</a>
 																						<?php */ ?>
-																					</td>
-																					<td>
-																						<form method="post" action="components/<?php echo $module_folder_directory; ?><?php echo $module; ?>/pdf_create_files.php" target="_blank">
-																							<input type="hidden" name="module" value="<?php echo $module; ?>">
-																							<input type="hidden" name="menu_id" value="<?php echo $menu_id; ?>">
-																							<input type="hidden" name="workorder_id" value="<?php echo $workorder_id; ?>">
-																							<button type="submit" title="Print Work Order" class=" waves-effect waves-light brown darken-1  btn gradient-45deg-light-green-cyan box-shadow-none border-round mr-1 mb-1">
-																								<i class="material-icons dp48">print</i>
-																							</button>
-																						</form>
 																					</td>
 																				</tr>
 																		<?php
@@ -1126,11 +1136,9 @@ if ($cmd == 'add') {
 																		$i = 0;
 																		if ($count_cl1 > 0) {
 																			$row_cl1 = $db->fetch($result_cl1);
-																			foreach ($row_cl1 as $data) {
-																				$workorder_done_id 	= $data['workorder_done_id'];
-																				$workorder_id 		= $data['id']; ?>
+																			foreach ($row_cl1 as $data) { ?>
 																				<tr>
-																					<td><?php echo $workorder_id; ?></td>
+																					<td><?php echo $data['id']; ?></td>
 																					<td><?php echo $data['technician_name']; ?></td>
 																					<td><?php echo $data['laborhours']; ?></td>
 																					<td>
@@ -1138,7 +1146,7 @@ if ($cmd == 'add') {
 																						<?php if ($data['timein'] != "") echo "OUT: " . dateformat1_with_time_USA($data['timeout']); ?>
 																					</td>
 																					<td>
-																						<a class="" href="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&cmd3=edit&active_tab=tab3&id=" . $id . "&detail_id=" . $workorder_done_id) ?>">
+																						<a class="" href="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&cmd3=edit&active_tab=tab3&id=" . $id . "&detail_id=" . $data['workorder_done_id']) ?>">
 																							<i class="material-icons dp48">edit</i>
 																						</a>
 																						<?php /*?>
@@ -1148,16 +1156,14 @@ if ($cmd == 'add') {
 																						</a>
 																						<?php */ ?>
 																					</td>
-																					<td> <?php /*?>
-																						<form method="post" action="components/<?php echo $module_folder_directory; ?><?php echo $module; ?>/pdf_create_files2.php" target="_blank">
+																					<td>
+																						<form method="post" action="components/<?php echo $module_folder_directory; ?><?php echo $module; ?>/pdf_create_files.php" target="_blank">
 																							<input type="hidden" name="module" value="<?php echo $module; ?>">
 																							<input type="hidden" name="menu_id" value="<?php echo $menu_id; ?>">
-																							<input type="hidden" name="workorder_done_id" value="<?php echo $workorder_done_id; ?>">
-																							<input type="hidden" name="workorder_id" value="<?php echo $workorder_id; ?>">
-																							<button type="submit" title="Print Work Order" class=" waves-effect waves-light brown darken-1  btn gradient-45deg-light-green-cyan box-shadow-none border-round mr-1 mb-1">
+																							<button type="submit" title="View Voucher" class=" waves-effect waves-light brown darken-1  btn gradient-45deg-light-green-cyan box-shadow-none border-round mr-1 mb-1">
 																								<i class="material-icons dp48">print</i>
 																							</button>
-																						</form> <?php */ ?>
+																						</form>
 																					</td>
 																				</tr>
 																		<?php
@@ -1180,6 +1186,143 @@ if ($cmd == 'add') {
 								?>
 							</div>
 							<!--Tab3 End-->
+
+							<!--Tab4 Begin-->
+							<div id="tab4" class="active" style="display: <?php if (!isset($active_tab) || (isset($active_tab) && $active_tab == 'tab4')) {
+																				echo "block";
+																			} else {
+																				echo "none";
+																			} ?>;">
+								<div class="card-panel">
+									<form class="infovalidate" action="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&id=" . $id . "&cmd4=" . $cmd4 . "&detail_id=" . $detail_id . "&active_tab=tab4") ?>" method="post">
+										<input type="hidden" name="is_Submit_tab4" value="Y" />
+										<input type="hidden" name="cmd" value="<?php if (isset($cmd)) echo $cmd; ?>" />
+										<input type="hidden" name="id" value="<?php if (isset($id)) echo $id; ?>" />
+										<input type="hidden" name="cmd4" value="<?php if (isset($cmd4)) echo $cmd4; ?>" />
+										<input type="hidden" name="detail_id" value="<?php if (isset($detail_id)) echo $detail_id; ?>" />
+										<input type="hidden" name="csrf_token" value="<?php if (isset($_SESSION['csrf_session'])) {
+																							echo encrypt($_SESSION['csrf_session']);
+																						} ?>">
+										<input type="hidden" name="active_tab" value="tab4" />
+										<h4>Contracts </h4>
+										<div class="row">
+											
+											<div class="input-field col m6 s12">
+												<i class="material-icons prefix pt-2">person_outline</i>
+												<input readonly  type="text" id="csaccountnum" value="<?php if (isset($csaccountnum)) {
+																																		echo $csaccountnum;
+																																	} ?>" class="validate <?php if (isset($csaccountnum_valid)) {
+																																								echo $csaccountnum_valid;
+																																							} ?>">
+												<label for="csaccountnum">Cs Account Num</label>
+											</div>
+										</div>
+										<div class="row">
+										<div class="input-field col m3 s12 ">
+												<i class="material-icons prefix">date_range</i>
+												<input id="contractdate" type="text" name="contractdate" class="datepicker <?php if (isset($contractdate_valid)) {
+																																echo $contractdate_valid;
+																															} ?>" value="<?php if (isset($contractdate)) {
+																																				echo $contractdate;
+																																			} ?>">
+												<label for="contractdate"> Contract Date</label>
+											</div>
+											<div class="input-field col m3 s12 ">
+												<i class="material-icons prefix">date_range</i>
+												<input id="contractexpirationdate" type="text" name="contractexpirationdate" class="datepicker <?php if (isset($contractexpirationdate_valid)) {
+																																echo $contractexpirationdate_valid;
+																															} ?>" value="<?php if (isset($contractexpirationdate)) {
+																																				echo $contractexpirationdate;
+																																			} ?>">
+												<label for="contractexpirationdate"> Contract Expiration Date</label>
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="input-field col m4 s12"></div>
+											<div class="input-field col m4 s12">
+												<button class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col m12 s12" type="submit" name="add"><?php echo $btn4; ?></button>
+											</div>
+											<div class="input-field col m4 s12"></div>
+										</div>
+
+									</form>
+								</div>
+
+								<?php ///*
+								?>
+								<div class="section section-data-tables">
+									<div class="row">
+										<div class="col m12 s12">
+											<div class="card">
+												<div class="card-content">
+													<div class="row">
+														<div class="col m12 s12">
+															<?php
+															$sql_cl1 = " SELECT id, customerinfoid, csaccountnum, contractdate, contractexpirationdate FROM contracts
+																WHERE customerinfoid = '" . $id . "'";
+																		
+															//echo $sql_cl1;
+															$result_cl1 	= $db->query($conn, $sql_cl1);
+															$count_cl1 		= $db->counter($result_cl1);
+															if ($count_cl1 > 0) { ?>
+																<table id="page-length-option"  class="display">
+																	<thead>
+																		<tr>
+																			
+																			<th>Contract Date</th>
+																			<th>Contract Expiration Date</th>
+																			<th>Action</th>
+																			<!-- <th>Print</th> -->
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<?php
+																		$i = 0;
+																		if ($count_cl1 > 0) {
+																			$row_cl1 = $db->fetch($result_cl1);
+																			foreach ($row_cl1 as $data) { ?>
+																				<tr>
+																					
+																					<td><?php echo $data['contractdate']; ?></td>
+																					<td><?php echo $data['contractexpirationdate']; ?></td>
+																					
+																					<td>
+																						<a class="" href="?string=<?php echo encrypt("module=" . $module . "&page=add&cmd=edit&cmd4=edit&active_tab=tab4&id=" . $id . "&detail_id=" . $data['id']) ?>">
+																							<i class="material-icons dp48">edit</i>
+																						</a>
+																					
+																					</td>
+																					<!-- <td>
+																						<form method="post" action="components/<?php echo $module_folder_directory; ?><?php echo $module; ?>/pdf_create_files.php" target="_blank">
+																							<input type="hidden" name="module" value="<?php echo $module; ?>">
+																							<input type="hidden" name="menu_id" value="<?php echo $menu_id; ?>">
+																							<button type="submit" title="View Voucher" class=" waves-effect waves-light brown darken-1  btn gradient-45deg-light-green-cyan box-shadow-none border-round mr-1 mb-1">
+																								<i class="material-icons dp48">print</i>
+																							</button>
+																						</form>
+																					</td> -->
+																				</tr>
+																		<?php
+																				$i++;
+																			}
+																		} ?>
+																	</tbody>
+																</table>
+															<?php } ?>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="content-overlay"></div>
+									<!-- Multi Select -->
+								</div>
+								<?php //*/ 
+								?>
+							</div>
+							<!--Tab4 End-->
 						</div>
 					</div>
 				</section>
